@@ -64,6 +64,51 @@ def buscar_contas_a_receber():
     return cursor.fetchall()
 
 
+# Função para editar uma conta a pagar
+def editar_conta_a_pagar(id_conta):
+    descricao = input("Nova descrição da conta a pagar: ")
+    valor = float(input("Novo valor da conta a pagar: "))
+    data_vencimento = input("Nova data de vencimento da conta a pagar: ")
+    pago = input("A conta já foi paga? (Sim/Não): ")
+
+    cursor.execute('''
+        UPDATE ContasAPagar
+        SET descricao = ?, valor = ?, data_vencimento = ?, pago = ?
+        WHERE id = ?
+    ''', (descricao, valor, data_vencimento, pago, id_conta))
+    conexao.commit()
+
+# Função para editar uma conta a receber
+def editar_conta_a_receber(id_conta):
+    descricao = input("Nova descrição da conta a receber: ")
+    valor = float(input("Novo valor da conta a receber: "))
+    data_a_receber = input("Nova data de vencimento da conta a receber: ")
+    recebido = input("Quanto já foi recebido desta conta? ")
+
+    cursor.execute('''
+        UPDATE ContasAReceber
+        SET descricao = ?, valor = ?, data_A_Receber = ?, Recebido = ?
+        WHERE id = ?
+    ''', (descricao, valor, data_a_receber, recebido, id_conta))
+    conexao.commit()
+
+# Função para deletar uma conta a pagar
+def deletar_conta_a_pagar(id_conta):
+    cursor.execute('''
+        DELETE FROM ContasAPagar
+        WHERE id = ?
+    ''', (id_conta,))
+    conexao.commit()
+
+# Função para deletar uma conta a receber
+def deletar_conta_a_receber(id_conta):
+    cursor.execute('''
+        DELETE FROM ContasAReceber
+        WHERE id = ?
+    ''', (id_conta,))
+    conexao.commit()
+
+
 
 while True:
     menu = input("""Qual opção deseja realizar?
@@ -77,7 +122,7 @@ while True:
                 [8] Deletar contas a receber
                 [9] Sair
                 
-                Opção:""")
+                Opção: """)
 
     if menu == "1":
         criar_conta_a_pagar()
@@ -86,10 +131,12 @@ while True:
         criar_conta_a_receber()
 
     elif menu == "3":
-        pass
+        id_conta = int(input("Digite o ID da conta a pagar que você deseja editar: "))
+        editar_conta_a_pagar(id_conta)
 
     elif menu == "4":
-        pass
+        id_conta = int(input("Digite o ID da conta a receber que você deseja editar: "))
+        editar_conta_a_receber(id_conta)
 
     elif menu == "5":
             contas_a_pagar = buscar_contas_a_pagar()
@@ -108,10 +155,13 @@ while True:
             print(100*"-")
 
     elif menu == "7":
-        pass
-
+        id_conta = int(input("Digite o id da conta que deseja deletar: "))
+        deletar_conta_a_pagar(id_conta)
+        print('Conta deletada com sucesso!')
     elif menu == "8":
-        pass
+        id_conta = int(input("Digite o id da conta que deseja deletar: "))
+        deletar_conta_a_receber(id_conta)
+        print('Conta deletada com sucesso!')
 
     elif menu == "9":
         print("Saindo do programa.")
